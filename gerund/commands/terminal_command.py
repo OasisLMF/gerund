@@ -77,6 +77,8 @@ class TerminalCommand:
         """
         if self.environment_variables is None:
             return None
+        if len(self.environment_variables.keys()) == 0:
+            return None
 
         buffer: List[str] = []
 

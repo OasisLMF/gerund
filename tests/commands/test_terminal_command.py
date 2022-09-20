@@ -79,6 +79,9 @@ class TestTerminalCommand(TestCase):
         self.test.environment_variables = None
         self.assertEqual(None, self.test._process_variables())
 
+        self.test.environment_variables = {}
+        self.assertEqual(None, self.test._process_variables())
+
     def test__process_command(self):
         test = TerminalCommand("test")
         self.assertEqual("test", test._process_command())
@@ -91,9 +94,25 @@ class TestTerminalCommand(TestCase):
         expected_outcome = 'export ONE="1" && export TWO="two" && export THREE="3" && test'
         self.assertEqual(expected_outcome, test._compile_command())
 
+        test = TerminalCommand("test", environment_variables=None)
+        expected_outcome = 'test'
+        self.assertEqual(expected_outcome, test._compile_command())
+
+        test = TerminalCommand("test", environment_variables={})
+        expected_outcome = 'test'
+        self.assertEqual(expected_outcome, test._compile_command())
+
         test = TerminalCommand("test", environment_variables=self.env_vars, ip_address=self.ip_address)
         expected_outcome = """ssh -A -o StrictHostKeyChecking=no ubuntu@123456 ' export ONE="1" && export """
         expected_outcome += """TWO="two" && export THREE="3" && test '"""
+        self.assertEqual(expected_outcome, test._compile_command())
+
+        test = TerminalCommand("test", environment_variables=None, ip_address=self.ip_address)
+        expected_outcome = "ssh -A -o StrictHostKeyChecking=no ubuntu@123456 ' test '"
+        self.assertEqual(expected_outcome, test._compile_command())
+
+        test = TerminalCommand("test", environment_variables={}, ip_address=self.ip_address)
+        expected_outcome = "ssh -A -o StrictHostKeyChecking=no ubuntu@123456 ' test '"
         self.assertEqual(expected_outcome, test._compile_command())
 
     def test_wait(self):
