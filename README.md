@@ -1,6 +1,12 @@
 # Gerund
 This package is responsible for compiling and running bash commands. 
 
+## Install using pip
+The package can be installed using the following command:
+```bash
+pip install git+https://github.com/OasisLMF/gerund.git
+```
+
 ## Basic usage with environment variable
 Gerund supports environment variables and chained commands out of the box. For instance, let us build a basic
 script that gets environment variables and prints them out with the following:
