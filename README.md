@@ -75,10 +75,7 @@ The very fact that the ```run_script.py``` runs at all is because the ```Termina
 the ```{=>SCRIPT_PATH}``` notation and searched the ```LocalVariableStorage```. 
 
 ## Running commands on server
-This is currently limited but we can SSH into a server and run a command on that server. Right now
-you must be SSHed into a server and forwarded your credentials but in the future we will work on
-defining where your SSH key is. We can run a command on a server with the following code:
-
+If we want to run a command on a server we can use the following parameters:
 ```python
 from gerund.commands.terminal_command import TerminalCommand
 
@@ -88,6 +85,10 @@ env_vars = {
     "THREE": "3"
 }
 
-test = TerminalCommand('echo "test"', environment_variables=env_vars, ip_address="12345")
+test = TerminalCommand('echo "test"', environment_variables=env_vars, ip_address="12345", 
+                       username="ubuntu", key="./path/to/SomeKey.pem")
 test.wait()
 ```
+
+The ```username``` and ```key``` parameters are optional. If we do not define the ```username``` the default will be
+"ubuntu". If we do not define a path to a key then the command will try and use the SSH agent. 
