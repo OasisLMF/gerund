@@ -20,9 +20,11 @@ class TerminalCommand:
         environment_variables (Optional[Dict[str, str]]): environment variables to be loaded into the command if present
         ip_address (Optional[str]): the IP address that the command is going to be run on if present
         key (Optional[str]): path to key however, not yet used
+        username (str): the username for the server (default is "ubuntu")
     """
     def __init__(self, command: InputCmd, environment_variables: EnvVars = None,
-                 ip_address: Optional[str] = None, key: Optional[str] = None) -> None:
+                 ip_address: Optional[str] = None, key: Optional[str] = None,
+                 username: str = "ubuntu") -> None:
         """
         The constructor for the TerminalCommand class.
 
@@ -30,6 +32,7 @@ class TerminalCommand:
         :param environment_variables: (Optional[Dict[str, str]]) environment variables to be loaded into the command
         :param ip_address: (Optional[str]) the IP address that the command is going to be run on if present
         :param key: (Optional[str]) path to key however, not yet used
+        :param username: (str) the username for the server (default is "ubuntu")
         """
         self._process: Optional[Popen] = None
         self._command_str: Optional[str] = None
@@ -38,6 +41,7 @@ class TerminalCommand:
         self.environment_variables: EnvVars = environment_variables
         self.ip_address: Optional[str] = ip_address
         self.key: Optional[str] = key
+        self.username: str = username
         self._process_input(command=command)
         self._process_remote()
 
@@ -109,8 +113,13 @@ class TerminalCommand:
         buffer: List[str] = []
         vars_command: Optional[str] = self._process_variables()
 
+        if self.key is None:
+            command_prefix = "ssh -A -o StrictHostKeyChecking=no"
+        else:
+            command_prefix = f"ssh -A -o StrictHostKeyChecking=no -i '{self.key}'"
+
         if self._remote is True:
-            buffer.append(f"ssh -A -o StrictHostKeyChecking=no ubuntu@{self.ip_address}")
+            buffer.append(f"{command_prefix} {self.username}@{self.ip_address}")
             buffer.append("'")
 
         if vars_command is not None:
