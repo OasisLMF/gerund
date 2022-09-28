@@ -1,0 +1,15 @@
+[meta]
+output=result.txt
+
+[vars]
+one=1
+two=two
+
+[env_vars]
+three=3
+four=four
+
+[commands]
+echo $three
+echo $four
+echo {=>one}

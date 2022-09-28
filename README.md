@@ -98,3 +98,78 @@ test.wait()
 
 The ```username``` and ```key``` parameters are optional. If we do not define the ```username``` the default will be
 "ubuntu". If we do not define a path to a key then the command will try and use the SSH agent. 
+
+## Config files
+Gerund handles config files when running a command. This is where we run a command that points to a config file which
+has metadata and a chain of commands. For instance, we can define the following ```gerund.yml``` config file:
+
+```yaml
+output: "result.txt"
+vars:
+  one: 1
+  two: two
+env_vars:
+  three: "3"
+  four: four
+commands:
+  - "echo $three"
+  - "echo $four"
+  - "echo {=>one}"
+```
+
+We can then our config file with the following commands:
+
+```bash
+gerund --f path/to/gerund.yml
+```
+
+Because we have defined the ```output``` flat the output of the chain of commands will be captured and written to the
+file defined. If the ```output``` field is not provided the output will merely be printed out to the console. We can
+also define the following optional fields:
+
+- **ip_address**: the IP address of where the command will run if provided
+- **key**: path to the SSH pem key if running on a server
+- **username**: username for the server if IP is provided
+
+We can also provide the following file formats:
+
+### Json
+
+```json
+{
+  "output": "result.txt",
+  "vars": {
+    "one": 1,
+    "two": "two"
+  },
+  "env_vars": {
+    "three": "3",
+    "four": "four"
+  },
+  "commands": [
+    "echo $three",
+    "echo $four",
+    "echo {=>one}"
+  ]
+}
+```
+
+### txt
+
+```
+[meta]
+output=result.txt
+
+[vars]
+one=1
+two=two
+
+[env_vars]
+three=3
+four=four
+
+[commands]
+echo $three
+echo $four
+echo {=>one}
+```

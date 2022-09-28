@@ -20,6 +20,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
+            "gerund=gerund.entry_points.run_config:main"
         ]
     },
 )
