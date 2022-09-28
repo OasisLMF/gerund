@@ -17,6 +17,12 @@ from gerund.components.local_variable_storage import LocalVariableStorage
 
 
 def process_data_from_txt_file(path: str) -> dict:
+    """
+    Loads the data from the txt config file and packages the loaded data into a format for the company.
+
+    :param path: (str) the path for the txt config file
+    :return: (dict) the packaged config data
+    """
     config = ConfigTxt(path=path)
     config.read()
     data = dict()
@@ -29,6 +35,27 @@ def process_data_from_txt_file(path: str) -> dict:
     data["vars"] = config.vars
     data["commands"] = config.commands
     data["env_vars"] = config.env_vars
+    return data
+
+
+def process_data(file_path: str, file_type: str) -> dict:
+    """
+    Extracts the data from the config file.
+
+    :param file_path: (str) the path to the config file
+    :param file_type: (str) the type of file being loaded
+    :return: (dict) the data from the config file
+    """
+    if file_type in ["yml", "yaml"]:
+        with open(file_path, "r") as file:
+            data = yaml.load(file, Loader=yaml.FullLoader)
+    elif file_type == "json":
+        with open(file_path, "r") as file:
+            data = json.loads(file.read())
+    elif file_type == "txt":
+        data = process_data_from_txt_file(path=file_path)
+    else:
+        raise ValueError(f"{file_type} is not supported")
     return data
 
 
@@ -49,16 +76,7 @@ def main() -> None:
     file_type = args.f.split(".")[-1]
     file_path = f"{os.getcwd()}/{args.f}"
 
-    if file_type in ["yml", "yaml"]:
-        with open(file_path, "r") as file:
-            data = yaml.load(file, Loader=yaml.FullLoader)
-    elif file_type == "json":
-        with open(file_path, "r") as file:
-            data = json.loads(file.read())
-    elif file_type == "txt":
-        data = process_data_from_txt_file(path=file_path)
-    else:
-        raise ValueError(f"{file_type} is not supported")
+    data = process_data(file_path=file_path, file_type=file_type)
 
     local_vars = data.get("vars")
     if local_vars is not None:
