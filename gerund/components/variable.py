@@ -38,7 +38,7 @@ class Variable:
 
         if current_value is None:
             raise ValueError(f"{self.name[2:]} not found in profile storage")
-        return current_value
+        return str(current_value)
 
     def _extract_value_from_config_vars(self) -> str:
         """
@@ -55,12 +55,12 @@ class Variable:
         if self.ip_address is None or self.ip_address is False:
             with open(f"{self.path}/{self.name[2:]}.txt", "r") as file:
                 value = file.read()
-            return value
+            return str(value)
 
         ssh_value_process = Popen(f"ssh -A ubuntu@{variable_map.ip_address} 'cat {self.path}/{self.name[2:]}.txt'",
                                   stdout=PIPE, shell=True)
         ssh_value_process.wait()
-        return ssh_value_process.communicate()[0].decode().replace("\n", "")
+        return str(ssh_value_process.communicate()[0].decode().replace("\n", ""))
 
     def __str__(self) -> str:
         return self.value
