@@ -2,7 +2,7 @@
 This file defines the class that compiles and runs terminal commands locally or on a server.
 """
 from subprocess import Popen, PIPE
-from typing import Optional, List, Dict
+from typing import Optional, List
 
 from gerund.components.command_string import CommandString
 from gerund.components.variable import Variable
