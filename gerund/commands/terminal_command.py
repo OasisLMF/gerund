@@ -2,13 +2,11 @@
 This file defines the class that compiles and runs terminal commands locally or on a server.
 """
 from subprocess import Popen, PIPE
-from typing import Optional, Union, List, Dict
+from typing import Optional, List, Dict
 
-from gerund.components.variable import Variable
 from gerund.components.command_string import CommandString
-
-EnvVars = Optional[Dict[str, str]]
-InputCmd = Union[str, List[str]]
+from gerund.components.variable import Variable
+from gerund.enums import InputCmd, EnvVars
 
 
 class TerminalCommand:
