@@ -173,3 +173,74 @@ echo $three
 echo $four
 echo {=>one}
 ```
+
+## Bash scripts
+Gerund supports bash scripts. You can either pass in a list of commands that will be written as a bash script, or you
+can pass in a path to a bash script to be run. If the ```ip_address``` is passed in the bash script will be run on the
+server belonging to the ```ip_address```. For instance, let us say that he has the following bash script:
+
+```bash
+#!/usr/bin/env bash
+
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+cd $SCRIPTPATH
+
+ls
+echo $ONE
+
+if [ -d "/path/to/dir" ]
+then
+    echo "Directory /path/to/dir exists"
+else
+    echo "Directory /path/to/dir does not exist"
+fi
+```
+
+we can point to this bash script and run it with the following code:
+
+```python
+from gerund.commands.bash_script import BashScript
+from typing import Optional, List
+
+example = BashScript(path="./path/to/script.sh")
+outcome: Optional[List[str]] = example.wait()
+```
+
+The command version would take the following form:
+
+```python
+from gerund.commands.bash_script import BashScript
+from typing import Optional, List
+
+commands = [
+            '#!/usr/bin/env bash',
+            '',
+            'SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"',
+            'cd $SCRIPTPATH',
+            '',
+            'ls',
+            'echo $ONE',
+            '',
+            'if [ -d "/path/to/dir" ]',
+            'then',
+            '    echo "Directory /path/to/dir exists"',
+            'else',
+            '    echo "Directory /path/to/dir does not exist"',
+            'fi',
+            '',
+            ''
+        ]
+
+example = BashScript(commands=commands)
+outcome: Optional[List[str]] = example.wait()
+```
+
+The ```BashScript``` constructor supports the following inputs:
+
+* **commands:** ```(Optional[List[str]])``` each element is a line in a bash script
+* **path:** ```(Optional[str])``` path to bash script to be written or read
+* **environment_variables:** ```(EnvVars)``` environment variables to be applied when running bash script
+* **ip_address:** ```(Optional[str])``` IP address of the server to run the bash script if running on server
+* **key:** ```(Optional[str])``` path to pem key if needed to be run on server
+* **username:** ```(str)``` the username of the server which has a default of "ubuntu"
+* **capture_output:** ```(bool)``` for the output to be captured with a default of False
