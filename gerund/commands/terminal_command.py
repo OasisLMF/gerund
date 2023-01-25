@@ -116,6 +116,7 @@ class TerminalCommand:
         else:
             command_prefix = f"ssh -A -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o CheckHostIP=no -i '{self.key}'"
 
+        print(f"\n\n\n{command_prefix}\n\n\n")
         if self._remote is True:
             buffer.append(f"{command_prefix} {self.username}@{self.ip_address}")
             buffer.append("'")
