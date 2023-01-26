@@ -141,10 +141,12 @@ class TerminalCommand:
         compiled_command: str = self._compile_command()
 
         if capture_output is True:
+            print(compiled_command)
             self._process = Popen(compiled_command, shell=True, stdout=PIPE)
             self._process.wait()
             return self._process.communicate()[0].decode().split("\n")[:-1]
         else:
+            print(compiled_command)
             self._process = Popen(compiled_command, shell=True)
             self._process.wait()
 
