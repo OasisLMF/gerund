@@ -116,7 +116,7 @@ class TerminalCommand:
         else:
             command_prefix = f"ssh -A -o StrictHostKeyChecking=no -i '{self.key}'"
 
-        print(f"\n\n\n{command_prefix}\n\n\n")
+        # print(f"\n\n\n{command_prefix}\n\n\n")
         if self._remote is True:
             buffer.append(f"{command_prefix} {self.username}@{self.ip_address}")
             buffer.append("'")
@@ -128,6 +128,7 @@ class TerminalCommand:
 
         if self._remote is True:
             buffer.append("'")
+        print(f"\n\n\n{''.join(buffer)}\n\n\n")
         return " ".join(buffer)
 
     def wait(self, capture_output: bool = False) -> Optional[List[str]]:
