@@ -112,9 +112,9 @@ class TerminalCommand:
         vars_command: Optional[str] = self._process_variables()
 
         if self.key is None:
-            command_prefix = "ssh -A -o \"StrictHostKeyChecking no\" -o \"UserKnownHostsFile /dev/null\" -o \"CheckHostIP no\""
+            command_prefix = "ssh -A -o StrictHostKeyChecking=no"
         else:
-            command_prefix = f"ssh -A -o \"StrictHostKeyChecking no\" -o \"UserKnownHostsFile /dev/null\" -o \"CheckHostIP no\" -i '{self.key}'"
+            command_prefix = f"ssh -A -o StrictHostKeyChecking=no -i '{self.key}'"
 
         print(f"\n\n\n{command_prefix}\n\n\n")
         if self._remote is True:
