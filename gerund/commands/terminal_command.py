@@ -110,11 +110,13 @@ class TerminalCommand:
         """
         buffer: List[str] = []
         vars_command: Optional[str] = self._process_variables()
+        # TODO => add verbose command option "-o LogLevel=DEBUG"
+        ssh_options: str = "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
 
         if self.key is None:
-            command_prefix = "ssh -A -o StrictHostKeyChecking=no"
+            command_prefix = f"ssh -A {ssh_options}"
         else:
-            command_prefix = f"ssh -A -o StrictHostKeyChecking=no -i '{self.key}'"
+            command_prefix = f"ssh -A {ssh_options} -i '{self.key}'"
 
         if self._remote is True:
             buffer.append(f"{command_prefix} {self.username}@{self.ip_address}")
@@ -127,6 +129,7 @@ class TerminalCommand:
 
         if self._remote is True:
             buffer.append("'")
+            buffer.append(" -y")
         return " ".join(buffer)
 
     def wait(self, capture_output: bool = False) -> Optional[List[str]]:
@@ -139,10 +142,12 @@ class TerminalCommand:
         compiled_command: str = self._compile_command()
 
         if capture_output is True:
+            print(compiled_command)
             self._process = Popen(compiled_command, shell=True, stdout=PIPE)
             self._process.wait()
             return self._process.communicate()[0].decode().split("\n")[:-1]
         else:
+            print(compiled_command)
             self._process = Popen(compiled_command, shell=True)
             self._process.wait()
 
