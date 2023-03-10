@@ -57,7 +57,9 @@ class Variable:
                 value = file.read()
             return str(value)
 
-        ssh_value_process = Popen(f"ssh -A ubuntu@{variable_map.ip_address} 'cat {self.path}/{self.name[2:]}.txt'",
+        ssh_options: str = "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+
+        ssh_value_process = Popen(f"ssh {ssh_options} -A ubuntu@{variable_map.ip_address} 'cat {self.path}/{self.name[2:]}.txt'",
                                   stdout=PIPE, shell=True)
         ssh_value_process.wait()
         return str(ssh_value_process.communicate()[0].decode().replace("\n", ""))
