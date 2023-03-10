@@ -129,7 +129,6 @@ class TerminalCommand:
 
         if self._remote is True:
             buffer.append("'")
-            buffer.append(" -y")
         return " ".join(buffer)
 
     def wait(self, capture_output: bool = False) -> Optional[List[str]]:
