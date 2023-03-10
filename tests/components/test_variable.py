@@ -69,7 +69,7 @@ class VariableTest(TestCase):
         outcome = test._extract_value_from_config_vars()
 
         self.assertEqual("something", outcome)
-        mock_popen.assert_called_once_with("ssh -A ubuntu@0.0.0.0:500 'cat /path/to/something/test.txt'",
+        mock_popen.assert_called_once_with("ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -A ubuntu@0.0.0.0:500 'cat /path/to/something/test.txt'",
                                            stdout=-1, shell=True)
 
     @patch("gerund.components.variable.Variable._extract_value_from_config_vars")
