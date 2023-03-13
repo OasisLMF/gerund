@@ -81,10 +81,11 @@ class BashScript:
         Returns: (Optional[List[str]]) captured output from the script if self.capture_output is True
         """
         script_name = self._path.split("/")[-1]
+        ssh_prefix: str = "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
         if self.key is None:
-            command = f"scp {self._path} ubuntu@{self.ip_address}:/home/{self.username}/{script_name}"
+            command = f"scp {ssh_prefix} {self._path} ubuntu@{self.ip_address}:/home/{self.username}/{script_name}"
         else:
-            command = f"scp -i {self.key} {self._path} ubuntu@{self.ip_address}:/home/{self.username}/{script_name}"
+            command = f"scp {ssh_prefix} -i {self.key} {self._path} ubuntu@{self.ip_address}:/home/{self.username}/{script_name}"
 
         # copy script onto server
         copy_to_server = Popen(command, shell=True)
