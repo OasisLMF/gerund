@@ -69,9 +69,10 @@ class TestBashScript(TestCase):
     def test__run_on_server(self, mock_open, mock_terminal_command):
         self.path_test.ip_address = "123456"
         key_path = "some_key.pem"
+        ssh_prefix: str = "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
         self.path_test._run_on_server()
 
-        command = f'scp {self.write_path} ubuntu@123456:/home/ubuntu/another_script.sh'
+        command = f'scp {ssh_prefix} {self.write_path} ubuntu@123456:/home/ubuntu/another_script.sh'
         mock_open.assert_called_once_with(command, shell=True)
         mock_open.return_value.wait.assert_called_once_with()
 
@@ -87,7 +88,7 @@ class TestBashScript(TestCase):
         self.path_test.key = key_path
         self.path_test._run_on_server()
 
-        command = f'scp -i {key_path} {self.write_path} ubuntu@123456:/home/ubuntu/another_script.sh'
+        command = f'scp {ssh_prefix} -i {key_path} {self.write_path} ubuntu@123456:/home/ubuntu/another_script.sh'
         mock_open.assert_called_once_with(command, shell=True)
         mock_open.return_value.wait.assert_called_once_with()
 
